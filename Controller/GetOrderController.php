@@ -6,9 +6,9 @@
 
 declare(strict_types=1);
 
-namespace EveryWorkflow\SalesOrderBundle\Controller\Admin;
+namespace EveryWorkflow\SalesOrderBundle\Controller;
 
-use EveryWorkflow\CoreBundle\Annotation\EWFRoute;
+use EveryWorkflow\CoreBundle\Annotation\EwRoute;
 use EveryWorkflow\SalesOrderBundle\Repository\SalesOrderRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,16 +23,22 @@ class GetOrderController extends AbstractController
         $this->salesOrderRepository = $salesOrderRepository;
     }
 
-    /**
-     * @EWFRoute(
-     *     admin_api_path="sales/order/{uuid}",
-     *     defaults={"uuid"="create"},
-     *     name="admin.sales.order.view",
-     *     methods="GET"
-     * )
-     * @throws \Exception
-     */
-    public function __invoke(string $uuid, Request $request): JsonResponse
+    #[EwRoute(
+        path: "sales/order/{uuid}",
+        name: 'sales.order.view',
+        methods: 'GET',
+        permissions: 'sales.order.view',
+        swagger: [
+            'parameters' => [
+                [
+                    'name' => 'uuid',
+                    'in' => 'path',
+                    'default' => 'create',
+                ]
+            ]
+        ]
+    )]
+    public function __invoke(Request $request, string $uuid = 'create'): JsonResponse
     {
         $data = [];
 
@@ -45,6 +51,6 @@ class GetOrderController extends AbstractController
 
         $data['data_form'] = $this->salesOrderRepository->getForm()->toArray();
 
-        return (new JsonResponse())->setData($data);
+        return new JsonResponse($data);
     }
 }

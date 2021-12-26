@@ -33,15 +33,14 @@ class Mongo_2021_01_10_00_00_00_SalesOrder_Migration implements MigrationInterfa
 
     public function migrate(): bool
     {
-        /** @var EntityDocument $productEntity */
-        $orderEntity = $this->entityRepository->getDocumentFactory()
-            ->create(EntityDocument::class);
-        $orderEntity
+        /** @var EntityDocument $entity */
+        $entity = $this->entityRepository->create();
+        $entity
             ->setName('Sales order')
             ->setCode($this->salesOrderRepository->getEntityCode())
             ->setClass(SalesOrderEntity::class)
             ->setStatus(SalesOrderEntity::STATUS_ENABLE);
-        $this->entityRepository->save($orderEntity);
+        $this->entityRepository->saveOne($entity);
 
         $attributeData = [
             [
@@ -53,16 +52,16 @@ class Mongo_2021_01_10_00_00_00_SalesOrder_Migration implements MigrationInterfa
                 'is_required' => true,
             ],
             [
-                'code' => 'firstname',
-                'name' => 'Firstname',
+                'code' => 'first_name',
+                'name' => 'First name',
                 'type' => 'text_attribute',
                 'is_used_in_grid' => true,
                 'is_used_in_form' => true,
                 'is_required' => true,
             ],
             [
-                'code' => 'lastname',
-                'name' => 'Lastname',
+                'code' => 'last_name',
+                'name' => 'Last name',
                 'type' => 'text_attribute',
                 'is_used_in_grid' => true,
                 'is_used_in_form' => true,
@@ -81,9 +80,8 @@ class Mongo_2021_01_10_00_00_00_SalesOrder_Migration implements MigrationInterfa
         foreach ($attributeData as $item) {
             $item['entity_code'] = $this->salesOrderRepository->getEntityCode();
             $item['sort_order'] = $sortOrder++;
-            $attribute = $this->attributeRepository->getDocumentFactory()
-                ->createAttribute($item);
-            $this->attributeRepository->save($attribute);
+            $attribute = $this->attributeRepository->create($item);
+            $this->attributeRepository->saveOne($attribute);
         }
 
         return self::SUCCESS;

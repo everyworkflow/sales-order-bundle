@@ -6,9 +6,9 @@
 
 declare(strict_types=1);
 
-namespace EveryWorkflow\SalesOrderBundle\Controller\Admin;
+namespace EveryWorkflow\SalesOrderBundle\Controller;
 
-use EveryWorkflow\CoreBundle\Annotation\EWFRoute;
+use EveryWorkflow\CoreBundle\Annotation\EwRoute;
 use EveryWorkflow\SalesOrderBundle\Entity\SalesOrderEntityInterface;
 use EveryWorkflow\SalesOrderBundle\Repository\SalesOrderRepositoryInterface;
 use MongoDB\InsertOneResult;
@@ -26,27 +26,43 @@ class SaveOrderController extends AbstractController
         $this->salesOrderRepository = $salesOrderRepository;
     }
 
-    /**
-     * @EWFRoute(
-     *     admin_api_path="sales/order/{uuid}",
-     *     defaults={"uuid"="create"},
-     *     name="admin.sales.order.save",
-     *     methods="POST"
-     * )
-     */
-    public function __invoke(string $uuid, Request $request): JsonResponse
+    #[EwRoute(
+        path: "sales/order/{uuid}",
+        name: 'sales.order.save',
+        methods: 'POST',
+        permissions: 'sales.order.save',
+        swagger: [
+            'parameters' => [
+                [
+                    'name' => 'uuid',
+                    'in' => 'path',
+                    'default' => 'create',
+                ]
+            ],
+            'requestBody' => [
+                'content' => [
+                    'application/json' => [
+                        'schema' => [
+                            'properties' => []
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    )]
+    public function __invoke(Request $request, string $uuid = 'create'): JsonResponse
     {
         $submitData = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         if ('create' === $uuid) {
             /** @var SalesOrderEntityInterface $item */
-            $item = $this->salesOrderRepository->getNewEntity($submitData);
+            $item = $this->salesOrderRepository->create($submitData);
         } else {
             $item = $this->salesOrderRepository->findById($uuid);
             foreach ($submitData as $key => $val) {
                 $item->setData($key, $val);
             }
         }
-        $result = $this->salesOrderRepository->saveEntity($item);
+        $result = $this->salesOrderRepository->saveOne($item);
 
         if ($result instanceof InsertOneResult) {
             if ($result->getInsertedId()) {
@@ -58,7 +74,7 @@ class SaveOrderController extends AbstractController
             }
         }
 
-        return (new JsonResponse())->setData([
+        return new JsonResponse([
             'message' => 'Successfully saved changes.',
             'item' => $item->toArray(),
         ]);

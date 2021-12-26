@@ -8,16 +8,12 @@ declare(strict_types=1);
 
 namespace EveryWorkflow\SalesOrderBundle\Repository;
 
-use EveryWorkflow\CoreBundle\Annotation\RepoDocument;
 use EveryWorkflow\SalesOrderBundle\Entity\SalesOrderEntity;
 use EveryWorkflow\EavBundle\Repository\BaseEntityRepository;
+use EveryWorkflow\EavBundle\Support\Attribute\EntityRepositoryAttribute;
 
-/**
- * @RepoDocument(doc_name=SalesOrderEntity::class)
- */
+#[EntityRepositoryAttribute(documentClass: SalesOrderEntity::class, entityCode: 'sales_order')]
 class SalesOrderRepository extends BaseEntityRepository implements SalesOrderRepositoryInterface
 {
-    protected string $collectionName = 'sales_order_entity_collection';
-    protected array $indexNames = ['_id'];
-    protected string $entityCode = 'sales_order';
+    // Something
 }

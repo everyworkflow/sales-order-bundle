@@ -6,9 +6,9 @@
 
 declare(strict_types=1);
 
-namespace EveryWorkflow\SalesOrderBundle\Controller\Admin;
+namespace EveryWorkflow\SalesOrderBundle\Controller;
 
-use EveryWorkflow\CoreBundle\Annotation\EWFRoute;
+use EveryWorkflow\CoreBundle\Annotation\EwRoute;
 use EveryWorkflow\SalesOrderBundle\DataGrid\SalesOrderDataGridInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,17 +23,17 @@ class ListOrderController extends AbstractController
         $this->salesOrderDataGrid = $salesOrderDataGrid;
     }
 
-    /**
-     * @EWFRoute(
-     *     admin_api_path="sales/order",
-     *     name="admin.sales.order",
-     *     priority=10,
-     *     methods="GET"
-     * )
-     */
+    #[EwRoute(
+        path: "sales/order",
+        name: 'sales.order',
+        priority: 10,
+        methods: 'GET',
+        permissions: 'sales.order.list',
+        swagger: true
+    )]
     public function __invoke(Request $request): JsonResponse
     {
         $dataGrid = $this->salesOrderDataGrid->setFromRequest($request);
-        return (new JsonResponse())->setData($dataGrid->toArray());
+        return new JsonResponse($dataGrid->toArray());
     }
 }
