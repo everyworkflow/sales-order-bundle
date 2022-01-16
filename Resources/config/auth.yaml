@@ -1,0 +1,7 @@
+auth:
+  permissions:
+    sales.order:
+      view: View Sales order
+      list: List Sales order
+      save: Save Sales order
+      delete: Delete Sales order

@@ -1,0 +1,46 @@
+setting:
+    menu:
+        sales:
+            label: Sales
+            sort_order: 8000
+        sales.checkout:
+            label: Checkout
+            parent: sales
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
+        sales.email_template:
+            label: Email template
+            parent: sales
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
+        sales.payment_method:
+            label: Payment Method
+            menu_type: group
+            parent: sales
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
+        sales.payment.cash_on_delivery:
+            label: Cash on delivery
+            parent: sales.payment_method
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
+        sales.payment.bank_transfer:
+            label: Bank transfer
+            parent: sales.payment_method
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
+        sales.payment.cheque:
+            label: Cheque payment
+            parent: sales.payment_method
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
+        sales.payment.paypal:
+            label: Paypal
+            parent: sales.payment_method
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
+        sales.delivery_method:
+            label: Delivery Method
+            menu_type: group
+            parent: sales
+        sales.delivery.free_shipping:
+            label: Free Shipping
+            parent: sales.delivery_method
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
+        sales.delivery.flat_rate:
+            label: Flat rate
+            parent: sales.delivery_method
+            # form_class: EveryWorkflow\SettingBundle\Form\General\WebSettingForm
