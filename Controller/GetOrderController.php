@@ -49,7 +49,9 @@ class GetOrderController extends AbstractController
             }
         }
 
-        $data['data_form'] = $this->salesOrderRepository->getForm()->toArray();
+        if ($request->get('for') === 'data-form') {
+            $data['data_form'] = $this->salesOrderRepository->getForm()->toArray();
+        }
 
         return new JsonResponse($data);
     }
